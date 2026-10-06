@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8종 코인 베팅 게임</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,"Malgun Gothic",sans-serif;background:linear-gradient(135deg,#151a35,#26124d,#102c45);color:#fff;min-height:100vh}
+.container{max-width:1100px;margin:auto;padding:22px}
+header{text-align:center;margin-bottom:18px}
+h1{font-size:34px;margin:8px 0}
+.subtitle{opacity:.8}
+.coinbar{position:sticky;top:0;z-index:10;background:rgba(10,12,30,.92);backdrop-filter:blur(8px);border:1px solid #ffffff22;border-radius:16px;padding:14px 18px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 8px 30px #0005}
+.coins{font-size:28px;font-weight:800;color:#ffd84d}
+button{border:0;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer;color:#fff;background:#5b4bdb;transition:.15s}
+button:hover{transform:translateY(-2px);filter:brightness(1.12)}
+button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.reset{background:#555}
+.tabs{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-bottom:16px}
+.tab{background:#ffffff12;border:1px solid #ffffff18;padding:12px 5px;font-size:13px}
+.tab.active{background:#7b5cff;border-color:#a999ff}
+.panel{display:none;background:rgba(9,12,29,.82);border:1px solid #ffffff18;border-radius:20px;padding:22px;min-height:430px;box-shadow:0 15px 45px #0005}
+.panel.active{display:block}
+h2{text-align:center;margin-top:0}
+.controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:15px 0}
+input{background:#10152e;color:white;border:1px solid #ffffff2b;border-radius:10px;padding:12px;width:150px;font-size:16px}
+.choice{background:#ffffff0d;border:1px solid #ffffff22}
+.choice.selected{background:#6b55ed;border-color:#b7aaff}
+.arena{min-height:150px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:14px}
+.card{background:linear-gradient(145deg,#20284b,#11172e);border:1px solid #ffffff1d;border-radius:16px;padding:18px;text-align:center;min-width:120px}
+.big{font-size:65px;text-align:center;margin:20px}
+.result{min-height:44px;text-align:center;font-size:20px;font-weight:800;margin:14px}
+.track{width:100%;max-width:700px;margin:8px auto;background:#ffffff12;border-radius:14px;padding:9px}
+.runner{height:28px;background:#ffffff12;border-radius:10px;position:relative;overflow:hidden}
+.runner span{position:absolute;left:0;top:0;height:100%;width:0;border-radius:10px;background:linear-gradient(90deg,#5d7cff,#ff5fd2);transition:width .1s}
+.history{margin-top:18px;background:#ffffff08;border-radius:15px;padding:14px;max-height:150px;overflow:auto;font-size:13px}
+.history div{padding:5px;border-bottom:1px solid #ffffff0d}
+.milestone{display:none;text-align:center;background:linear-gradient(90deg,#ffc400,#ff7a00);color:#241500;padding:10px;border-radius:12px;margin-bottom:15px;font-weight:900}
+.overlay{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal{width:min(620px,100%);background:linear-gradient(145deg,#20294d,#16132c);border:1px solid #ffffff2b;border-radius:22px;padding:25px;box-shadow:0 25px 80px #000}
+.modal h2{font-size:30px}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.answers button{background:#ffffff12;border:1px solid #ffffff1c}
+.quiz-note{text-align:center;color:#ffd84d;font-weight:800}
+.target{font-size:80px;cursor:pointer;user-select:none;transition:.1s}
+.target:active{transform:scale(.85)}
+.grid{display:grid;grid-template-columns:repeat(5,70px);gap:9px;justify-content:center;margin:20px auto}
+.cell{width:70px;height:70px;font-size:30px;padding:0;background:#ffffff0d;border:1px solid #ffffff22}
+.safe{background:#214d3b!important}.danger{background:#7b2030!important}
+.bombgrid{display:grid;grid-template-columns:repeat(5,70px);gap:8px;justify-content:center;margin:18px auto}
+.bombcell{width:70px;height:70px;background:#ffffff0d;border:1px solid #ffffff1d;padding:0;font-size:28px}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.shake{animation:shake .25s infinite}
+@media(max-width:800px){.tabs{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:500px){.tabs{grid-template-columns:repeat(2,1fr)}.grid,.bombgrid{grid-template-columns:repeat(5,52px)}.cell,.bombcell{width:52px;height:52px;font-size:23px}.answers{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<header><h1>🎰 8종 코인 베팅 게임</h1><div class="subtitle">운과 실력으로 코인을 모아보세요!</div></header>
+
+<div class="coinbar">
+  <div>💰 보유 코인 <span id="coins" class="coins">1,000</span></div>
+  <button class="reset" onclick="resetGame()">🔄 초기화</button>
+</div>
+<div id="milestone" class="milestone">🏆 1,500 코인 달성! 대형 보상 +2,000 코인 획득!</div>
+
+<div class="tabs">
+<button class="tab active" onclick="showGame(0)">🏁 레이스</button>
+<button class="tab" onclick="showGame(1)">🎡 룰렛</button>
+<button class="tab" onclick="showGame(2)">🎰 슬롯</button>
+<button class="tab" onclick="showGame(3)">🎲 주사위</button>
+<button class="tab" onclick="showGame(4)">🪙 동전</button>
+<button class="tab" onclick="showGame(5)">🎯 과녁</button>
+<button class="tab" onclick="showGame(6)">🃏 카드</button>
+<button class="tab" onclick="showGame(7)">💣 폭탄</button>
+</div>
+
+<section class="panel active">
+<h2>🏁 레이스 베팅</h2>
+<div class="controls" id="raceChoices"></div>
+<div class="controls"><input id="raceBet" type="number" min="10" value="50" placeholder="베팅 코인"><button onclick="race()">🏁 레이스 시작</button></div>
+<div id="raceArena"></div><div id="raceResult" class="result"></div>
+</section>
+
+<section class="panel">
+<h2>🎡 룰렛</h2>
+<div class="controls" id="rouletteChoices"></div>
+<div class="controls"><input id="rouletteBet" type="number" min="10" value="50"><button onclick="roulette()">🎡 룰렛 돌리기</button></div>
+<div id="rouletteWheel" class="big">🎡</div><div id="rouletteResult" class="result"></div>
+</section>
+
+<section class="panel">
+<h2>🎰 슬롯 머신</h2>
+<div class="controls"><input id="slotBet" type="number" min="10" value="50"><button onclick="slots()">🎰 돌리기</button></div>
+<div id="slotDisplay" class="big">🍒 | 🍋 | 🍊</div>
+<div id="slotResult" class="result"></div>
+</section>
+
+<section class="panel">
+<h2>🎲 주사위</h2>
+<div class="controls" id="diceChoices"></div>
+<div class="controls"><input id="diceBet" type="number" min="10" value="50"><button onclick="dice()">🎲 굴리기</button></div>
+<div id="diceDisplay" class="big">⚀ vs ⚀</div><div id="diceResult" class="result"></div>
+</section>
+
+<section class="panel">
+<h2>🪙 동전 뒤집기</h2>
+<div class="controls" id="coinChoices"></div>
+<div class="controls"><input id="coinBet" type="number" min="10" value="50"><button onclick="flipCoin()">🪙 뒤집기</button></div>
+<div id="coinDisplay" class="big">🪙</div><div id="coinResult" class="result"></div>
+</section>
+
+<section class="panel">
+<h2>🎯 과녁 맞히기</h2>
+<p style="text-align:center">움직이는 과녁을 클릭하면 당첨! 난이도가 올라갈수록 배당도 높아집니다.</p>
+<div class="controls"><input id="targetBet" type="number" min="10" value="50">
+<select id="targetLevel" style="padding:12px;border-radius:10px;background:#10152e;color:white;border:1px solid #ffffff2b">
+<option value="1">쉬움 ×2</option><option value="2">보통 ×3</option><option value="3">어려움 ×5</option>
+</select><button onclick="startTarget()">🎯 시작</button></div>
+<div id="targetArea" style="height:170px;position:relative"></div>
+<div id="targetResult" class="result"></div>
+</section>
+
+<section class="panel">
+<h2>🃏 카드 맞히기</h2>
+<p style="text-align:center">뒤집힌 카드 중 보너스 카드가 있는 위치를 맞혀보세요.</p>
+<div class="controls"><input id="cardBet" type="number" min="10" value="50"><button onclick="startCards()">🃏 카드 배치</button></div>
+<div id="cardArea" class="arena"></div><div id="cardResult" class="result"></div>
+</section>
+
+<section class="panel">
+<h2>💣 폭탄 피하기</h2>
+<p style="text-align:center">5×5 칸 중 안전한 칸을 선택하세요. 폭탄을 피할수록 배수가 올라갑니다.</p>
+<div class="controls"><input id="bombBet" type="number" min="10" value="50"><button onclick="startBomb()">💣 새 게임</button></div>
+<div id="bombArea" class="bombgrid"></div><div id="bombResult" class="result"></div>
+</section>
+
+<div class="history"><b>📜 최근 기록</b><div id="history"></div></div>
+</div>
+
+
+
+<div id="bonusOverlay" class="overlay">
+<div class="modal" style="text-align:center">
+<h2 id="bonusTitle">🎁 보너스 게임</h2>
+<p id="bonusDesc" style="font-size:18px"></p>
+<div id="bonusGame"></div>
+<div id="bonusResult" class="result"></div>
+</div>
+</div>
+
+<div id="rechargeOverlay" class="overlay">
+<div class="modal" style="text-align:center">
+<h2>⏳ 코인 충전 대기</h2>
+<p style="font-size:20px">코인을 모두 잃었습니다!</p>
+<div style="font-size:55px">💰</div>
+<p>1분 후 <b style="color:#ffd84d">50코인</b>이 자동으로 충전됩니다.</p>
+<div id="rechargeTimer" style="font-size:42px;font-weight:900;color:#ffd84d;margin:15px">01:00</div>
+<p style="opacity:.75">기다리는 동안 상식 퀴즈로 코인을 얻을 수도 있습니다.</p>
+<button onclick="closeRechargeAndQuiz()">📚 퀴즈 풀기</button>
+</div>
+</div>
+
+<div id="quizOverlay" class="overlay">
+<div class="modal">
+<h2>📚 상식 퀴즈</h2>
+<p class="quiz-note">코인이 0이 되었습니다! 정답을 맞히면 +300 코인을 받습니다.</p>
+<div id="quizQuestion"></div><div id="quizAnswers" class="answers"></div>
+</div>
+</div>
+
+<div id="rewardOverlay" class="overlay">
+<div class="modal" style="text-align:center">
+<h2>🏆 대형 보상 획득!</h2>
+<p style="font-size:20px">보유 코인이 1,500코인을 넘었습니다!</p>
+<div style="font-size:65px">🎁💰🎁</div>
+<p style="font-size:25px;color:#ffd84d;font-weight:900">보너스 +2,000 코인</p>
+<button onclick="closeReward()">확인</button>
+</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let coins=Number(localStorage.getItem("eightGameCoins")||1000);
+let history=JSON.parse(localStorage.getItem("eightGameHistory")||"[]");
+let rewardClaimed=localStorage.getItem("eightGameRewardClaimed")==="1";
+let busy=false, quizBusy=false;
+let selectedRace=null, selectedRoulette=null, selectedDice=null, selectedCoin=null;
+let bombActive=false,bombBet=0,bombStep=0,bombMine=-1;
+
+const races=[["⚡ 번개",2],["🔥 불꽃",2.5],["🌪️ 질풍",3],["🐇 토끼",4]];
+const qs=[
+["대한민국의 수도는?",["서울","부산","인천","대전"],0],
+["지구에서 가장 큰 대양은?",["태평양","대서양","인도양","북극해"],0],
+["물의 화학식은?",["H₂O","CO₂","O₂","NaCl"],0],
+["1년은 몇 개월인가?",["10","11","12","13"],2],
+["태양계에서 가장 큰 행성은?",["지구","목성","화성","금성"],1],
+["세종대왕이 만든 문자는?",["한글","한자","로마자","가나"],0],
+["빛의 속도는 소리보다 빠른가?",["빠르다","느리다","같다","상황에 따라 다르다"],0],
+["피카소의 국적은?",["스페인","프랑스","이탈리아","독일"],0],
+["무지개의 색은 일반적으로 몇 가지인가?",["5","6","7","8"],2],
+["식물이 광합성에 사용하는 기체는?",["산소","질소","이산화탄소","수소"],2],
+["대한민국의 국화는?",["장미","무궁화","백합","개나리"],1],
+["가장 가까운 별은?",["달","태양","시리우스","북극성"],1],
+["컴퓨터의 CPU는 주로 무엇을 처리하는가?",["연산","물","전기 생산","인쇄"],0],
+["삼각형의 내각의 합은?",["90°","180°","270°","360°"],1],
+["세계에서 가장 큰 대륙은?",["아시아","유럽","아프리카","남아메리카"],0],
+["HTML은 주로 무엇을 만드는 데 쓰이는가?",["웹페이지","운영체제","그래픽카드","백신"],0],
+["축구 한 팀의 경기장 내 선수 수는?",["9","10","11","12"],2],
+["소설 '어린 왕자'의 작가는?",["생텍쥐페리","톨스토이","셰익스피어","헤밍웨이"],0],
+["달은 지구의 무엇인가?",["위성","행성","항성","혜성"],0],
+["섭씨 0도에서 물은 일반적으로?",["얼음이 된다","끓는다","기체만 된다","변하지 않는다"],0]
+];
+
+function save(){
+ localStorage.setItem("eightGameCoins",coins);
+ localStorage.setItem("eightGameHistory",JSON.stringify(history.slice(0,30)));
+ localStorage.setItem("eightGameRewardClaimed",rewardClaimed?"1":"0");
+ localStorage.setItem("eightGameBonusClaimed",JSON.stringify(bonusClaimed));
+}
+function addHistory(s){history.unshift(s);history=history.slice(0,30)}
+function update(){
+ $("coins").textContent=coins.toLocaleString();
+ $("history").innerHTML=history.map(x=>"<div>"+x+"</div>").join("");
+ if(coins>=1500&&!rewardClaimed){
+   rewardClaimed=true;coins+=2000;addHistory("🏆 1,500 코인 달성 대형 보상 +2,000");
+   $("milestone").style.display="block"; $("rewardOverlay").style.display="flex"; save();
+ }
+ if(rewardClaimed&&coins>=1500)$("milestone").style.display="block";
+ save();
+ checkBonusMilestone();
+ if(coins<=0&&!quizBusy&&!busy&&!rechargeActive){
+   startRecharge();
+}
+}
+
+function checkBonusMilestone(){
+ if(bonusBusy)return;
+ const target=bonusMilestones.find(n=>coins>=n&&!bonusClaimed[n]);
+ if(target) openBonusGame(target);
+}
+function openBonusGame(target){
+ bonusBusy=true;
+ bonusClaimed[target]=true;
+ save();
+ $("bonusOverlay").style.display="flex";
+ $("bonusResult").textContent="";
+ const rewards={500000:100000,1000000:250000,1500000:500000,2000000:1000000};
+ $("bonusTitle").textContent="🎁 "+target.toLocaleString()+" 코인 달성 보너스 게임";
+ $("bonusDesc").textContent="이번 보너스 게임에 성공하면 +"+rewards[target].toLocaleString()+" 코인을 받습니다!";
+ const box=$("bonusGame");
+ if(target===500000){
+   box.innerHTML=`<p>🔢 1부터 5 중에서 황금 숫자를 맞혀보세요!</p>
+   <div class="controls">${[1,2,3,4,5].map(n=>`<button onclick="bonusGuess(${target},${n})" style="font-size:24px;width:70px">${n}</button>`).join("")}</div>`;
+ }else if(target===1000000){
+   box.innerHTML=`<p>🃏 4장 중 💎 다이아몬드 카드를 골라보세요!</p>
+   <div class="controls">${[0,1,2,3].map(n=>`<button onclick="bonusCard(${target},${n})" style="font-size:45px;width:80px">🂠</button>`).join("")}</div>`;
+ }else if(target===1500000){
+   box.innerHTML=`<p>🎯 5초 안에 움직이는 황금 과녁을 맞혀보세요!</p><div id="bonusTarget" style="height:140px;position:relative"><span id="bonusTargetEmoji" class="target" onclick="bonusHitTarget(${target})">🎯</span></div>`;
+   const t=$("bonusTargetEmoji"); let end=Date.now()+5000;
+   function move(){if(!bonusBusy)return;if(Date.now()>=end){$("bonusResult").textContent="💨 시간 초과!";finishBonus();return} t.style.position="absolute";t.style.left=(Math.random()*75+5)+"%";t.style.top=(Math.random()*55+5)+"%";setTimeout(move,220)}
+   move();
+ }else{
+   box.innerHTML=`<p>💣 9칸 중 폭탄이 아닌 안전한 칸을 3번 연속 골라보세요!</p><div id="bonusSafeGrid" class="grid" style="grid-template-columns:repeat(3,70px)">${Array.from({length:9},(_,i)=>`<button class="cell" onclick="bonusSafe(${target},${i})">?</button>`).join("")}</div>`;
+   window.bonusSafeMine=Math.floor(Math.random()*9);window.bonusSafeCount=0;
+ }
+}
+function finishBonus(){
+ if(!bonusBusy)return;
+ const currentTitle=$("bonusTitle").textContent;
+ const target=bonusMilestones.find(n=>currentTitle.includes(n.toLocaleString()));
+ const rewards={500000:100000,1000000:250000,1500000:500000,2000000:1000000};
+ if(target){coins+=rewards[target];addHistory("🎁 "+target.toLocaleString()+" 코인 보너스 성공 +"+rewards[target].toLocaleString());}
+ bonusBusy=false;save();update();
+ setTimeout(()=>{$("bonusOverlay").style.display="none"},900);
+}
+function bonusGuess(target,n){
+ const answer=Math.floor(Math.random()*5)+1;
+ if(n===answer){$("bonusResult").textContent="🎉 정답!";finishBonus()}
+ else {$("bonusResult").textContent="❌ 아쉽습니다! 정답은 "+answer+"였습니다.";setTimeout(()=>{if(bonusBusy)openBonusGame(target)},700)}
+}
+function bonusCard(target,i){
+ const good=Math.floor(Math.random()*4);
+ [...$("bonusGame").querySelectorAll("button")].forEach(b=>b.disabled=true);
+ if(i===good){$("bonusResult").textContent="💎 다이아몬드 발견!";finishBonus()}
+ else {$("bonusResult").textContent="💥 꽝!";setTimeout(()=>{if(bonusBusy)openBonusGame(target)},700)}
+}
+function bonusHitTarget(target){$("bonusResult").textContent="🎯 명중!";finishBonus()}
+function bonusSafe(target,i){
+ if(i===window.bonusSafeMine){
+   $("bonusResult").textContent="💥 폭탄을 골랐습니다!";
+   setTimeout(()=>{if(bonusBusy)openBonusGame(target)},700);
+   return;
+ }
+ window.bonusSafeCount++;
+ $("bonusSafeGrid").children[i].textContent="💎";
+ $("bonusSafeGrid").children[i].disabled=true;
+ if(window.bonusSafeCount>=3){$("bonusResult").textContent="🏆 3연속 성공!";finishBonus()}
+}
+
+function validBet(id){
+ let n=Math.floor(Number($(id).value));
+ if(!Number.isFinite(n)||n<10||n>coins){alert("베팅은 10코인 이상, 보유 코인 이하로 입력하세요.");return 0}
+ return n;
+}
+function win(amount,mult,label){
+ let gain=Math.floor(amount*mult);coins+=gain;addHistory(label+" +" + gain+"코인");update();return gain;
+}
+function lose(amount,label){coins-=amount;addHistory(label+" -"+amount+"코인");update()}
+function showGame(i){document.querySelectorAll(".tab").forEach((b,n)=>b.classList.toggle("active",n===i));document.querySelectorAll(".panel").forEach((p,n)=>p.classList.toggle("active",n===i))}
+
+function buildChoices(){
+ $("raceChoices").innerHTML=races.map((r,i)=>`<button class="choice" onclick="pickRace(${i})">${r[0]} ×${r[1]}</button>`).join("");
+ $("rouletteChoices").innerHTML=["🔴 빨강","⚫ 검정","0","1","2","3","4","5","6","7","8","9"].map((x,i)=>`<button class="choice" onclick="pickRoulette('${x}')">${x}</button>`).join("");
+ $("diceChoices").innerHTML=["나","컴퓨터","무승부"].map((x,i)=>`<button class="choice" onclick="pickDice(${i})">${x}</button>`).join("");
+ $("coinChoices").innerHTML=["앞면","뒷면"].map((x,i)=>`<button class="choice" onclick="pickCoin(${i})">${x}</button>`).join("");
+}
+function mark(parent,index){[...$(parent).children].forEach((b,i)=>b.classList.toggle("selected",i===index))}
+function pickRace(i){selectedRace=i;mark("raceChoices",i)}
+function pickRoulette(x){selectedRoulette=x;[...$("rouletteChoices").children].forEach(b=>b.classList.toggle("selected",b.textContent===x))}
+function pickDice(i){selectedDice=i;mark("diceChoices",i)}
+function pickCoin(i){selectedCoin=i;mark("coinChoices",i)}
+
+function race(){
+ if(busy)return;if(selectedRace===null){alert("레이서부터 선택하세요.");return}
+ let bet=validBet("raceBet");if(!bet)return;busy=true;lose(bet,"🏁 레이스 베팅");
+ let arena=$("raceArena");arena.innerHTML=races.map(r=>`<div class="track"><b>${r[0]}</b><div class="runner"><span></span></div></div>`).join("");
+ let spans=[...arena.querySelectorAll("span")],pos=[0,0,0,0],timer=setInterval(()=>{
+  pos=pos.map((p,i)=>Math.min(100,p+Math.random()*4+1));
+  spans.forEach((s,i)=>s.style.width=pos[i]+"%");
+  if(Math.max(...pos)>=100){
+   clearInterval(timer);let winner=pos.indexOf(Math.max(...pos));
+   let mult=races[winner][1];
+   $("raceResult").textContent=`🏆 ${races[winner][0]} 우승!`;
+   if(winner===selectedRace)win(bet,mult,"🏁 레이스 적중");else addHistory("🏁 레이스 패배");
+   update();busy=false;update();
+  }
+ },100);
+}
+
+function roulette(){
+ if(busy)return;if(!selectedRoulette){alert("룰렛 항목을 선택하세요.");return}
+ let bet=validBet("rouletteBet");if(!bet)return;busy=true;lose(bet,"🎡 룰렛 베팅");
+ let w=$("rouletteWheel"),t=0;let anim=setInterval(()=>{w.textContent=["🔴","⚫","🟢"][Math.floor(Math.random()*3)];t+=100;if(t>=3000){clearInterval(anim);
+   let n=Math.floor(Math.random()*10), color=n===0?"초록":n%2?"검정":"빨강";w.textContent=n===0?"🟢 0":(color==="빨강"?"🔴 ":"⚫ ")+n;
+   let ok=selectedRoulette==="0"?n===0:["빨강","검정"].includes(selectedRoulette)?selectedRoulette===color:Number(selectedRoulette)===n;
+   if(ok){let mult=["빨강","검정"].includes(selectedRoulette)?2:10;win(bet,mult,"🎡 룰렛 적중")}else addHistory("🎡 룰렛 패배");
+   $("rouletteResult").textContent=ok?"🎉 적중!":"💨 아쉽게 빗나갔습니다.";update();busy=false;
+ }},75);
+}
+
+function slots(){
+ if(busy)return;let bet=validBet("slotBet");if(!bet)return;busy=true;lose(bet,"🎰 슬롯 베팅");
+ let sy=["🍒","🍋","🍊","🔔","⭐","💎"],d=$("slotDisplay"),t=0;
+ let anim=setInterval(()=>{d.textContent=[0,1,2].map(()=>sy[Math.floor(Math.random()*sy.length)]).join(" | ");t+=80;if(t>=2800){clearInterval(anim);
+   let a=[0,1,2].map(()=>sy[Math.floor(Math.random()*sy.length)]);d.textContent=a.join(" | ");
+   let mult=0;if(a[0]===a[1]&&a[1]===a[2])mult=a[0]==="💎"?20:8;else if(a.filter(x=>x==="⭐").length===2)mult=3;
+   if(mult){win(bet,mult,"🎰 슬롯 당첨");$("slotResult").textContent=`🎉 ${mult}배 당첨!`}else{$("slotResult").textContent="💨 꽝!";addHistory("🎰 슬롯 꽝");update()}busy=false;
+ }},80);
+}
+
+function dice(){
+ if(busy)return;if(selectedDice===null){alert("승부 대상을 선택하세요.");return}let bet=validBet("diceBet");if(!bet)return;busy=true;lose(bet,"🎲 주사위 베팅");
+ let d=$("diceDisplay"),t=0,faces=["⚀","⚁","⚂","⚃","⚄","⚅"];
+ let anim=setInterval(()=>{d.textContent=faces[Math.floor(Math.random()*6)]+" vs "+faces[Math.floor(Math.random()*6)];t+=100;if(t>=2200){clearInterval(anim);
+   let a=1+Math.floor(Math.random()*6),b=1+Math.floor(Math.random()*6);d.textContent=faces[a-1]+" vs "+faces[b-1];
+   let winner=a>b?0:b>a?1:2,ok=winner===selectedDice;
+   if(ok){let mult=winner===2?2.5:2;win(bet,mult,"🎲 주사위 적중");$("diceResult").textContent="🎉 적중!"}else{addHistory("🎲 주사위 패배");$("diceResult").textContent="💨 패배!"}update();busy=false;
+ }},100);
+}
+
+function flipCoin(){
+ if(busy)return;if(selectedCoin===null){alert("앞/뒷면을 선택하세요.");return}let bet=validBet("coinBet");if(!bet)return;busy=true;lose(bet,"🪙 동전 베팅");
+ let d=$("coinDisplay"),t=0;let anim=setInterval(()=>{d.textContent=t%2?"🪙 앞면":"🪙 뒷면";t++;if(t>=20){clearInterval(anim);
+   let result=Math.floor(Math.random()*2),ok=result===selectedCoin;d.textContent=result?"🪙 뒷면":"🪙 앞면";
+   if(ok){win(bet,2.5,"🪙 동전 적중");$("coinResult").textContent="🎉 적중! ×2.5"}else{addHistory("🪙 동전 패배");$("coinResult").textContent="💨 아쉽습니다."}update();busy=false;
+ }},100);
+}
+
+function startTarget(){
+ if(busy)return;let bet=validBet("targetBet");if(!bet)return;let level=Number($("targetLevel").value);busy=true;lose(bet,"🎯 과녁 베팅");
+ let area=$("targetArea");area.innerHTML='<div id="target" class="target">🎯</div>';let target=$("target"),time=0;
+ function move(){target.style.position="absolute";target.style.left=(Math.random()*80+5)+"%";target.style.top=(Math.random()*65+5)+"%"}
+ move();let timer=setInterval(()=>{move();time+=200;if(time>=5000){clearInterval(timer);if(target.parentNode){area.innerHTML="";$("targetResult").textContent="💨 시간 초과!";addHistory("🎯 과녁 실패");update()}busy=false}},200);
+ target.onclick=()=>{if(!busy)return;clearInterval(timer);area.innerHTML="🎯";win(bet,level===1?2:level===2?3:5,"🎯 과녁 적중");$("targetResult").textContent=`🎉 명중! ×${level===1?2:level===2?3:5}`;busy=false;update()};
+}
+
+function startCards(){
+ if(busy)return;let bet=validBet("cardBet");if(!bet)return;busy=true;lose(bet,"🃏 카드 베팅");
+ let area=$("cardArea"),good=Math.floor(Math.random()*4),cards=["🂠","🂠","🂠","🂠"];
+ area.innerHTML=cards.map((x,i)=>`<button class="card" style="font-size:55px" onclick="chooseCard(${i},${good},${bet})">${x}</button>`).join("");
+ $("cardResult").textContent="보너스 카드를 골라보세요!";
+}
+function chooseCard(i,good,bet){
+ if(!busy)return;let buttons=[...$("cardArea").children];buttons.forEach((b,n)=>b.disabled=true);
+ buttons[good].textContent="💎";buttons[i].textContent=i===good?"💎":"💣";
+ if(i===good){win(bet,4,"🃏 카드 적중");$("cardResult").textContent="🎉 대박! ×4"}else{addHistory("🃏 카드 실패");$("cardResult").textContent="💥 꽝!";update()}
+ busy=false;update();
+}
+
+function startBomb(){
+ if(busy)return;let bet=validBet("bombBet");if(!bet)return;busy=true;bombActive=true;bombBet=bet;bombStep=0;bombMine=Math.floor(Math.random()*25);lose(bet,"💣 폭탄 베팅");
+ let area=$("bombArea");area.innerHTML=Array.from({length:25},(_,i)=>`<button class="bombcell" onclick="pickBomb(${i})">?</button>`).join("");
+ $("bombResult").textContent="안전한 칸을 선택하세요. 현재 배수 ×1.5";
+}
+function pickBomb(i){
+ if(!bombActive)return;let buttons=[...$("bombArea").children];
+ if(i===bombMine){
+  buttons[i].textContent="💣";buttons[i].classList.add("danger");bombActive=false;busy=false;addHistory("💣 폭탄에 당했습니다");$("bombResult").textContent="💥 폭탄! 베팅금을 잃었습니다.";update();return;
+ }
+ bombStep++;buttons[i].textContent="💎";buttons[i].classList.add("safe");buttons[i].disabled=true;
+ let mult=1+0.5*bombStep;
+ $("bombResult").textContent=`✨ 안전! 현재 배수 ×${mult.toFixed(1)} — 계속 도전할까요?`;
+ if(bombStep>=8){
+   bombActive=false;busy=false;win(bombBet,mult,"💣 폭탄 피하기 성공");$("bombResult").textContent=`🏆 8칸 생존 성공! ×${mult.toFixed(1)}`;update();
+ }
+}
+
+let quizIndex=0;
+let rechargeTimer=null;
+let rechargeSeconds=60;
+let rechargeActive=false;
+const bonusMilestones=[500000,1000000,1500000,2000000];
+let bonusClaimed=JSON.parse(localStorage.getItem("eightGameBonusClaimed")||"{}");
+let bonusBusy=false;
+
+function startRecharge(){
+ if(rechargeActive)return;
+ rechargeActive=true;
+ rechargeSeconds=60;
+ $("rechargeOverlay").style.display="flex";
+ updateRechargeTimer();
+ rechargeTimer=setInterval(()=>{
+   rechargeSeconds--;
+   updateRechargeTimer();
+   if(rechargeSeconds<=0){
+     clearInterval(rechargeTimer);
+     rechargeTimer=null;
+     rechargeActive=false;
+     coins=50;
+     addHistory("⏳ 1분 대기 완료 +50 코인 충전");
+     $("rechargeOverlay").style.display="none";
+     update();
+   }
+ },1000);
+}
+function updateRechargeTimer(){
+ const m=String(Math.floor(rechargeSeconds/60)).padStart(2,"0");
+ const s=String(rechargeSeconds%60).padStart(2,"0");
+ $("rechargeTimer").textContent=m+":"+s;
+}
+function closeRechargeAndQuiz(){
+ $("rechargeOverlay").style.display="none";
+ openQuiz();
+}
+
+function openQuiz(){quizBusy=true;quizIndex=Math.floor(Math.random()*qs.length);let q=qs[quizIndex];$("quizQuestion").innerHTML="<h3>"+q[0]+"</h3>";$("quizAnswers").innerHTML=q[1].map((a,i)=>`<button onclick="answerQuiz(${i})">${a}</button>`).join("");$("quizOverlay").style.display="flex"}
+function answerQuiz(i){
+ if(!quizBusy)return;let q=qs[quizIndex];
+ if(i===q[2]){quizBusy=false;coins=300;addHistory("📚 상식 퀴즈 정답 +300");$("quizOverlay").style.display="none";update()}
+ else{$("quizQuestion").innerHTML+="<p style='color:#ff6677'>❌ 오답! 다시 도전하세요.</p>";setTimeout(openQuiz,700)}
+}
+function closeReward(){$("rewardOverlay").style.display="none"}
+function resetGame(){
+ if(!confirm("모든 코인과 기록을 초기화할까요?"))return;
+ if(rechargeTimer){clearInterval(rechargeTimer);rechargeTimer=null}
+coins=1000;history=[];rewardClaimed=false;busy=false;quizBusy=false;bombActive=false;rechargeActive=false;bonusClaimed={};bonusBusy=false;
+ localStorage.removeItem("eightGameCoins");localStorage.removeItem("eightGameHistory");localStorage.removeItem("eightGameRewardClaimed");localStorage.removeItem("eightGameBonusClaimed");
+ $("quizOverlay").style.display="none";$("rewardOverlay").style.display="none";$("rechargeOverlay").style.display="none";$("bonusOverlay").style.display="none";$("milestone").style.display="none";
+ update();
+}
+buildChoices();update();
+</script>
+</body>
+</html>
