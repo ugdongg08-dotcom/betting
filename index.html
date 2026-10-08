@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>8종 코인 베팅 게임</title>
+<title>ROYAL FORTUNE - 8종 게임</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,"Malgun Gothic",sans-serif;background:linear-gradient(135deg,#151a35,#26124d,#102c45);color:#fff;min-height:100vh}
@@ -11,7 +11,7 @@ body{margin:0;font-family:Arial,"Malgun Gothic",sans-serif;background:linear-gra
 header{text-align:center;margin-bottom:18px}
 h1{font-size:34px;margin:8px 0}
 .subtitle{opacity:.8}
-.coinbar{position:sticky;top:0;z-index:10;background:rgba(10,12,30,.92);backdrop-filter:blur(8px);border:1px solid #ffffff22;border-radius:16px;padding:14px 18px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 8px 30px #0005}
+.rankbox{margin:-8px 0 18px;background:#ffffff0a;border:1px solid #ffffff18;border-radius:16px;padding:14px}.ranktop{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.ranktop input{width:180px}.ranklist{margin-top:10px;display:grid;gap:6px}.rankrow{display:flex;justify-content:space-between;padding:8px 10px;background:#ffffff08;border-radius:9px}.rankrow.me{background:#6b55ed33;border:1px solid #9b8cff55}.ranktitle{font-weight:900;color:#ffd84d}.coinbar{position:sticky;top:0;z-index:10;background:rgba(10,12,30,.92);backdrop-filter:blur(8px);border:1px solid #ffffff22;border-radius:16px;padding:14px 18px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 8px 30px #0005}
 .coins{font-size:28px;font-weight:800;color:#ffd84d}
 button{border:0;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer;color:#fff;background:#5b4bdb;transition:.15s}
 button:hover{transform:translateY(-2px);filter:brightness(1.12)}
@@ -54,17 +54,194 @@ input{background:#10152e;color:white;border:1px solid #ffffff2b;border-radius:10
 .shake{animation:shake .25s infinite}
 @media(max-width:800px){.tabs{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:500px){.tabs{grid-template-columns:repeat(2,1fr)}.grid,.bombgrid{grid-template-columns:repeat(5,52px)}.cell,.bombcell{width:52px;height:52px;font-size:23px}.answers{grid-template-columns:1fr}}
+
+/* ===== CASINO LOUNGE THEME ===== */
+:root{
+  --gold:#f6c453;
+  --gold2:#ffe39a;
+  --red:#c92b3d;
+  --red2:#8e1527;
+  --green:#087c55;
+  --green2:#064d38;
+  --felt:#073b2d;
+  --ink:#090b0d;
+}
+body{
+  background:
+    radial-gradient(circle at 50% -10%,#5b1727 0,#240b16 28%,transparent 52%),
+    radial-gradient(circle at 0 40%,#0d503e 0,transparent 34%),
+    radial-gradient(circle at 100% 65%,#3b0d20 0,transparent 34%),
+    #080b0b;
+  color:#fff8e6;
+  letter-spacing:.1px;
+}
+body:before{
+  content:"";
+  position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background-image:radial-gradient(#ffffff14 1px,transparent 1px);
+  background-size:18px 18px;opacity:.18;
+}
+.container{max-width:1180px;padding:24px}
+header{
+  padding:20px 16px 18px;
+  margin-bottom:16px;
+  border:1px solid #d7a83d66;
+  border-radius:22px;
+  background:linear-gradient(180deg,#180a10dd,#0b0f0ddd);
+  box-shadow:0 0 35px #000, inset 0 1px #fff2;
+}
+h1{
+  font-size:42px;
+  margin:4px 0 7px;
+  color:var(--gold);
+  text-shadow:0 2px 0 #5b3000,0 0 18px #f6c45355;
+  letter-spacing:1px;
+}
+.subtitle{color:#eadbb8;opacity:1}
+.rankbox,.coinbar,.panel{
+  background:linear-gradient(145deg,#111817f5,#080b0bf5);
+  border:1px solid #d8a83f55;
+  box-shadow:0 14px 45px #000b,inset 0 1px #ffffff0d;
+}
+.rankbox{border-radius:18px}
+.ranktitle{color:var(--gold2);text-shadow:0 0 8px #f6c45333}
+.rankrow{background:#ffffff07;border:1px solid #ffffff08}
+.rankrow.me{
+  background:#5e101c55;
+  border-color:#e2b34d99;
+}
+.coinbar{
+  border-radius:18px;
+  padding:15px 20px;
+}
+.coins{
+  color:var(--gold);
+  text-shadow:0 0 14px #f6c45355;
+}
+button{
+  background:linear-gradient(180deg,#b92238,#7c1222);
+  border:1px solid #e7b84f99;
+  color:#fff8e8;
+  box-shadow:0 4px 0 #4a0913,0 0 12px #0008;
+}
+button:hover{
+  filter:brightness(1.15);
+  box-shadow:0 5px 0 #4a0913,0 0 18px #f6c45333;
+}
+button:active{transform:translateY(1px);box-shadow:0 2px 0 #4a0913}
+.reset{background:linear-gradient(180deg,#444,#252525)}
+.tabs{
+  grid-template-columns:repeat(8,1fr);
+  gap:8px;
+}
+.tab{
+  background:linear-gradient(180deg,#171b1a,#0c0f0e);
+  border:1px solid #d7a83d44;
+  color:#eadbb8;
+  box-shadow:inset 0 1px #fff1;
+}
+.tab.active{
+  background:linear-gradient(180deg,#c02b3e,#781321);
+  border-color:#f3ca65;
+  color:#fff;
+  box-shadow:0 0 18px #c92b3d55,inset 0 1px #fff3;
+}
+.panel{
+  border-radius:22px;
+  position:relative;
+  overflow:hidden;
+}
+.panel:before{
+  content:"♠  ♥  ♦  ♣";
+  position:absolute;right:18px;top:10px;
+  color:#f6c45314;font-size:34px;letter-spacing:8px;
+  pointer-events:none;
+}
+.panel h2{
+  color:var(--gold2);
+  text-shadow:0 0 12px #f6c45333;
+}
+.card{
+  background:linear-gradient(145deg,#18372d,#0c211a);
+  border:1px solid #d7a83d55;
+  box-shadow:0 8px 25px #0008,inset 0 1px #ffffff0a;
+}
+input{
+  background:#090d0c;
+  color:#fff8e8;
+  border:1px solid #d7a83d66;
+  box-shadow:inset 0 2px 8px #0008;
+}
+.choice{background:#ffffff08;border-color:#d7a83d44}
+.choice.selected{
+  background:linear-gradient(180deg,#bd273b,#74101e);
+  border-color:#f6c453;
+}
+.arena{
+  background:radial-gradient(circle,#0d563f55,#0000 65%);
+  border-radius:18px;
+}
+.track{
+  background:#06150f;
+  border:1px solid #d7a83d33;
+}
+.runner{background:#10261e}
+.runner span{
+  background:linear-gradient(90deg,#f6c453,#fff0a8,#c92b3d);
+}
+.result{color:#ffe39a;text-shadow:0 0 10px #f6c45333}
+.history{
+  background:#050807;
+  border:1px solid #d7a83d22;
+}
+.milestone{
+  background:linear-gradient(90deg,#e4aa32,#ffe49a,#d38e24);
+  color:#271500;
+  border:1px solid #fff0ad;
+  box-shadow:0 0 22px #f6c45344;
+}
+.overlay{background:#000d}
+.modal{
+  background:radial-gradient(circle at top,#3a111b,#100d0d 62%);
+  border:1px solid #e4b64f99;
+  box-shadow:0 0 60px #000,0 0 30px #c92b3d22;
+}
+.modal h2{color:var(--gold)}
+.answers button{background:#ffffff09;border-color:#d7a83d44}
+.quiz-note{color:var(--gold2)}
+.target{filter:drop-shadow(0 0 12px #f6c45355)}
+@media(max-width:850px){
+  .tabs{grid-template-columns:repeat(4,1fr)}
+  h1{font-size:34px}
+}
+@media(max-width:520px){
+  .container{padding:12px}
+  .tabs{grid-template-columns:repeat(2,1fr)}
+  .coinbar{position:relative}
+}
+
 </style>
 </head>
 <body>
 <div class="container">
-<header><h1>🎰 8종 코인 베팅 게임</h1><div class="subtitle">운과 실력으로 코인을 모아보세요!</div></header>
+<header><h1>♠ ROYAL FORTUNE ♠</h1>🎰 8종 코인 베팅 게임</h1><div class="subtitle">운과 실력으로 코인을 모아보세요!</div></header>
 
 <div class="coinbar">
   <div>💰 보유 코인 <span id="coins" class="coins">1,000</span></div>
   <button class="reset" onclick="resetGame()">🔄 초기화</button>
 </div>
 <div id="milestone" class="milestone">🏆 1,500 코인 달성! 대형 보상 +2,000 코인 획득!</div>
+<div class="rankbox">
+  <div class="ranktop">
+    <div><span class="ranktitle">🏆 코인 부자 랭킹</span> <span id="myRank" style="margin-left:8px;opacity:.9">내 순위 -</span></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <input id="playerName" maxlength="12" placeholder="닉네임 입력">
+      <button onclick="savePlayerName()">👤 이름 저장</button>
+    </div>
+  </div>
+  <div id="rankList" class="ranklist"></div>
+  <div style="font-size:12px;opacity:.65;margin-top:8px">※ 이 버전의 랭킹은 같은 브라우저에 저장됩니다.</div>
+</div>
 
 <div class="tabs">
 <button class="tab active" onclick="showGame(0)">🏁 레이스</button>
@@ -188,7 +365,7 @@ let history=JSON.parse(localStorage.getItem("eightGameHistory")||"[]");
 let rewardClaimed=localStorage.getItem("eightGameRewardClaimed")==="1";
 let busy=false, quizBusy=false;
 let selectedRace=null, selectedRoulette=null, selectedDice=null, selectedCoin=null;
-let bombActive=false,bombBet=0,bombStep=0,bombMine=-1;
+let bombActive=false,bombBet=0,bombStep=0,bombMines=new Set();
 
 const races=[["⚡ 번개",2],["🔥 불꽃",2.5],["🌪️ 질풍",3],["🐇 토끼",4]];
 const qs=[
@@ -214,6 +391,23 @@ const qs=[
 ["섭씨 0도에서 물은 일반적으로?",["얼음이 된다","끓는다","기체만 된다","변하지 않는다"],0]
 ];
 
+function savePlayerName(){
+ const n=$("playerName").value.trim().slice(0,12);
+ if(!n){alert("닉네임을 입력하세요.");return}
+ playerName=n;localStorage.setItem("eightGamePlayerName",playerName);updateRanking();addHistory("👤 닉네임을 "+playerName+"으로 설정");update();
+}
+function updateRanking(){
+ $("playerName").value=playerName;
+ const idx=leaderboard.findIndex(x=>x.name===playerName);
+ if(idx>=0) leaderboard[idx].coins=coins;
+ else leaderboard.push({name:playerName,coins:coins});
+ leaderboard.sort((a,b)=>b.coins-a.coins);
+ leaderboard=leaderboard.slice(0,20);
+ localStorage.setItem("eightGameLeaderboard",JSON.stringify(leaderboard));
+ const rank=leaderboard.findIndex(x=>x.name===playerName)+1;
+ $("myRank").textContent="내 순위 "+(rank>0?rank+"위":"-");
+ $("rankList").innerHTML=leaderboard.slice(0,10).map((x,i)=>`<div class="rankrow ${x.name===playerName?'me':''}"><span>${i+1}위 ${x.name}</span><b>${Number(x.coins).toLocaleString()} 코인</b></div>`).join("");
+}
 function save(){
  localStorage.setItem("eightGameCoins",coins);
  localStorage.setItem("eightGameHistory",JSON.stringify(history.slice(0,30)));
@@ -223,6 +417,7 @@ function save(){
 function addHistory(s){history.unshift(s);history=history.slice(0,30)}
 function update(){
  $("coins").textContent=coins.toLocaleString();
+ updateRanking();
  $("history").innerHTML=history.map(x=>"<div>"+x+"</div>").join("");
  if(coins>=1500&&!rewardClaimed){
    rewardClaimed=true;coins+=2000;addHistory("🏆 1,500 코인 달성 대형 보상 +2,000");
@@ -264,7 +459,7 @@ function openBonusGame(target){
    move();
  }else{
    box.innerHTML=`<p>💣 9칸 중 폭탄이 아닌 안전한 칸을 3번 연속 골라보세요!</p><div id="bonusSafeGrid" class="grid" style="grid-template-columns:repeat(3,70px)">${Array.from({length:9},(_,i)=>`<button class="cell" onclick="bonusSafe(${target},${i})">?</button>`).join("")}</div>`;
-   window.bonusSafeMine=Math.floor(Math.random()*9);window.bonusSafeCount=0;
+   window.bonusSafeMines=new Set();while(window.bonusSafeMines.size<3)window.bonusSafeMines.add(Math.floor(Math.random()*9));window.bonusSafeCount=0;
  }
 }
 function finishBonus(){
@@ -289,7 +484,7 @@ function bonusCard(target,i){
 }
 function bonusHitTarget(target){$("bonusResult").textContent="🎯 명중!";finishBonus()}
 function bonusSafe(target,i){
- if(i===window.bonusSafeMine){
+ if(window.bonusSafeMines.has(i)){
    $("bonusResult").textContent="💥 폭탄을 골랐습니다!";
    setTimeout(()=>{if(bonusBusy)openBonusGame(target)},700);
    return;
@@ -313,7 +508,7 @@ function showGame(i){document.querySelectorAll(".tab").forEach((b,n)=>b.classLis
 
 function buildChoices(){
  $("raceChoices").innerHTML=races.map((r,i)=>`<button class="choice" onclick="pickRace(${i})">${r[0]} ×${r[1]}</button>`).join("");
- $("rouletteChoices").innerHTML=["🔴 빨강","⚫ 검정","0","1","2","3","4","5","6","7","8","9"].map((x,i)=>`<button class="choice" onclick="pickRoulette('${x}')">${x}</button>`).join("");
+ $("rouletteChoices").innerHTML=["빨강","검정","0","1","2","3","4","5","6","7","8","9"].map((x,i)=>`<button class="choice" onclick="pickRoulette('${x}')">${x==="빨강"?"🔴 빨강":x==="검정"?"⚫ 검정":x}</button>`).join("");
  $("diceChoices").innerHTML=["나","컴퓨터","무승부"].map((x,i)=>`<button class="choice" onclick="pickDice(${i})">${x}</button>`).join("");
  $("coinChoices").innerHTML=["앞면","뒷면"].map((x,i)=>`<button class="choice" onclick="pickCoin(${i})">${x}</button>`).join("");
 }
@@ -343,11 +538,11 @@ function race(){
 function roulette(){
  if(busy)return;if(!selectedRoulette){alert("룰렛 항목을 선택하세요.");return}
  let bet=validBet("rouletteBet");if(!bet)return;busy=true;lose(bet,"🎡 룰렛 베팅");
- let w=$("rouletteWheel"),t=0;let anim=setInterval(()=>{w.textContent=["🔴","⚫","🟢"][Math.floor(Math.random()*3)];t+=100;if(t>=3000){clearInterval(anim);
+ let w=$("rouletteWheel"),t=0;let anim=setInterval(()=>{let spinN=Math.floor(Math.random()*10);w.textContent=spinN===0?"🟢 0":(spinN%2?"⚫ ":"🔴 ")+spinN;t+=100;if(t>=3000){clearInterval(anim);
    let n=Math.floor(Math.random()*10), color=n===0?"초록":n%2?"검정":"빨강";w.textContent=n===0?"🟢 0":(color==="빨강"?"🔴 ":"⚫ ")+n;
-   let ok=selectedRoulette==="0"?n===0:["빨강","검정"].includes(selectedRoulette)?selectedRoulette===color:Number(selectedRoulette)===n;
-   if(ok){let mult=["빨강","검정"].includes(selectedRoulette)?2:10;win(bet,mult,"🎡 룰렛 적중")}else addHistory("🎡 룰렛 패배");
-   $("rouletteResult").textContent=ok?"🎉 적중!":"💨 아쉽게 빗나갔습니다.";update();busy=false;
+   let ok=selectedRoulette==="0"?n===0:(selectedRoulette==="빨강"||selectedRoulette==="검정")?selectedRoulette===color:Number(selectedRoulette)===n;
+   if(ok){let mult=(selectedRoulette==="빨강"||selectedRoulette==="검정")?2:10;win(bet,mult,"🎡 룰렛 적중")}else{addHistory("🎡 룰렛 패배")}
+   $("rouletteResult").textContent=ok?"🎉 적중!":"💨 아쉽게 빗나갔습니다.";busy=false;update();
  }},75);
 }
 
@@ -356,8 +551,12 @@ function slots(){
  let sy=["🍒","🍋","🍊","🔔","⭐","💎"],d=$("slotDisplay"),t=0;
  let anim=setInterval(()=>{d.textContent=[0,1,2].map(()=>sy[Math.floor(Math.random()*sy.length)]).join(" | ");t+=80;if(t>=2800){clearInterval(anim);
    let a=[0,1,2].map(()=>sy[Math.floor(Math.random()*sy.length)]);d.textContent=a.join(" | ");
-   let mult=0;if(a[0]===a[1]&&a[1]===a[2])mult=a[0]==="💎"?20:8;else if(a.filter(x=>x==="⭐").length===2)mult=3;
-   if(mult){win(bet,mult,"🎰 슬롯 당첨");$("slotResult").textContent=`🎉 ${mult}배 당첨!`}else{$("slotResult").textContent="💨 꽝!";addHistory("🎰 슬롯 꽝");update()}busy=false;
+   let mult=0;
+   if(a[0]===a[1]&&a[1]===a[2]) mult=a[0]==="💎"?12:6;
+   else if(a[0]===a[1]||a[1]===a[2]||a[0]===a[2]) mult=2.5;
+   else if(a.filter(x=>x==="⭐").length===2) mult=3;
+   else if(a.filter(x=>x==="⭐").length===1) mult=1.3;
+   if(mult){win(bet,mult,"🎰 슬롯 당첨");$("slotResult").textContent=`🎉 ${mult}배 당첨!`}else{$("slotResult").textContent="💨 꽝!";addHistory("🎰 슬롯 꽝")}busy=false;update();
  }},80);
 }
 
@@ -367,7 +566,7 @@ function dice(){
  let anim=setInterval(()=>{d.textContent=faces[Math.floor(Math.random()*6)]+" vs "+faces[Math.floor(Math.random()*6)];t+=100;if(t>=2200){clearInterval(anim);
    let a=1+Math.floor(Math.random()*6),b=1+Math.floor(Math.random()*6);d.textContent=faces[a-1]+" vs "+faces[b-1];
    let winner=a>b?0:b>a?1:2,ok=winner===selectedDice;
-   if(ok){let mult=winner===2?2.5:2;win(bet,mult,"🎲 주사위 적중");$("diceResult").textContent="🎉 적중!"}else{addHistory("🎲 주사위 패배");$("diceResult").textContent="💨 패배!"}update();busy=false;
+   if(ok){let mult=winner===2?2.5:2;win(bet,mult,"🎲 주사위 적중");$("diceResult").textContent="🎉 적중!"}else{addHistory("🎲 주사위 패배");$("diceResult").textContent="💨 패배!"}busy=false;update();
  }},100);
 }
 
@@ -375,7 +574,7 @@ function flipCoin(){
  if(busy)return;if(selectedCoin===null){alert("앞/뒷면을 선택하세요.");return}let bet=validBet("coinBet");if(!bet)return;busy=true;lose(bet,"🪙 동전 베팅");
  let d=$("coinDisplay"),t=0;let anim=setInterval(()=>{d.textContent=t%2?"🪙 앞면":"🪙 뒷면";t++;if(t>=20){clearInterval(anim);
    let result=Math.floor(Math.random()*2),ok=result===selectedCoin;d.textContent=result?"🪙 뒷면":"🪙 앞면";
-   if(ok){win(bet,2.5,"🪙 동전 적중");$("coinResult").textContent="🎉 적중! ×2.5"}else{addHistory("🪙 동전 패배");$("coinResult").textContent="💨 아쉽습니다."}update();busy=false;
+   if(ok){win(bet,2.5,"🪙 동전 적중");$("coinResult").textContent="🎉 적중! ×2.5"}else{addHistory("🪙 동전 패배");$("coinResult").textContent="💨 아쉽습니다."}busy=false;update();
  }},100);
 }
 
@@ -396,26 +595,44 @@ function startCards(){
 function chooseCard(i,good,bet){
  if(!busy)return;let buttons=[...$("cardArea").children];buttons.forEach((b,n)=>b.disabled=true);
  buttons[good].textContent="💎";buttons[i].textContent=i===good?"💎":"💣";
- if(i===good){win(bet,4,"🃏 카드 적중");$("cardResult").textContent="🎉 대박! ×4"}else{addHistory("🃏 카드 실패");$("cardResult").textContent="💥 꽝!";update()}
+ if(i===good){win(bet,4,"🃏 카드 적중");$("cardResult").textContent="🎉 대박! ×4"}else{addHistory("🃏 카드 실패");$("cardResult").textContent="💥 꽝!"}
  busy=false;update();
 }
 
 function startBomb(){
- if(busy)return;let bet=validBet("bombBet");if(!bet)return;busy=true;bombActive=true;bombBet=bet;bombStep=0;bombMine=Math.floor(Math.random()*25);lose(bet,"💣 폭탄 베팅");
+ if(busy)return;
+ const oldCash=document.getElementById("bombCashOut");if(oldCash)oldCash.remove();let bet=validBet("bombBet");if(!bet)return;busy=true;bombActive=true;bombBet=bet;bombStep=0;bombMines=new Set();while(bombMines.size<5)bombMines.add(Math.floor(Math.random()*25));lose(bet,"💣 폭탄 베팅");
  let area=$("bombArea");area.innerHTML=Array.from({length:25},(_,i)=>`<button class="bombcell" onclick="pickBomb(${i})">?</button>`).join("");
  $("bombResult").textContent="안전한 칸을 선택하세요. 현재 배수 ×1.5";
 }
 function pickBomb(i){
- if(!bombActive)return;let buttons=[...$("bombArea").children];
- if(i===bombMine){
-  buttons[i].textContent="💣";buttons[i].classList.add("danger");bombActive=false;busy=false;addHistory("💣 폭탄에 당했습니다");$("bombResult").textContent="💥 폭탄! 베팅금을 잃었습니다.";update();return;
+ if(!bombActive||!busy)return;let buttons=[...$("bombArea").children];
+ if(!buttons[i]||buttons[i].disabled)return;
+ if(bombMines.has(i)){
+  buttons[i].textContent="💣";buttons[i].classList.add("danger");const cash=document.getElementById("bombCashOut");if(cash)cash.remove();bombActive=false;busy=false;addHistory("💣 폭탄에 당했습니다");$("bombResult").textContent="💥 폭탄! 베팅금을 잃었습니다.";update();return;
  }
  bombStep++;buttons[i].textContent="💎";buttons[i].classList.add("safe");buttons[i].disabled=true;
- let mult=1+0.5*bombStep;
- $("bombResult").textContent=`✨ 안전! 현재 배수 ×${mult.toFixed(1)} — 계속 도전할까요?`;
+ let mult=bombStep===1?1.15:bombStep===2?1.4:bombStep===3?1.8:bombStep===4?2.3:bombStep===5?3:bombStep===6?4:bombStep===7?5:6;
+ $("bombResult").textContent=`✨ 안전! 현재 배수 ×${mult.toFixed(1)} — 계속 도전하거나 지금 수익을 받을 수 있습니다.`;
+ if(bombStep<8){
+   const area=$("bombArea");
+   let cash=document.getElementById("bombCashOut");
+   if(!cash){cash=document.createElement("button");cash.id="bombCashOut";cash.textContent="💰 지금 수익 받기";cash.style.gridColumn="1 / -1";cash.onclick=()=>cashOutBomb();area.appendChild(cash)}
+ }
  if(bombStep>=8){
+   const cash=document.getElementById("bombCashOut");if(cash)cash.remove();
    bombActive=false;busy=false;win(bombBet,mult,"💣 폭탄 피하기 성공");$("bombResult").textContent=`🏆 8칸 생존 성공! ×${mult.toFixed(1)}`;update();
  }
+}
+
+function cashOutBomb(){
+ if(!bombActive||!busy)return;
+ const mult=1+0.5*bombStep;
+ bombActive=false;busy=false;
+ const cash=document.getElementById("bombCashOut");if(cash)cash.remove();
+ win(bombBet,mult,"💣 폭탄 수익 확보");
+ $("bombResult").textContent=`💰 수익 확보! ×${mult.toFixed(1)}`;
+ update();
 }
 
 let quizIndex=0;
@@ -425,6 +642,8 @@ let rechargeActive=false;
 const bonusMilestones=[500000,1000000,1500000,2000000];
 let bonusClaimed=JSON.parse(localStorage.getItem("eightGameBonusClaimed")||"{}");
 let bonusBusy=false;
+let playerName=localStorage.getItem("eightGamePlayerName")||"플레이어";
+let leaderboard=JSON.parse(localStorage.getItem("eightGameLeaderboard")||"[]");
 
 function startRecharge(){
  if(rechargeActive)return;
@@ -468,6 +687,7 @@ function resetGame(){
  if(rechargeTimer){clearInterval(rechargeTimer);rechargeTimer=null}
 coins=1000;history=[];rewardClaimed=false;busy=false;quizBusy=false;bombActive=false;rechargeActive=false;bonusClaimed={};bonusBusy=false;
  localStorage.removeItem("eightGameCoins");localStorage.removeItem("eightGameHistory");localStorage.removeItem("eightGameRewardClaimed");localStorage.removeItem("eightGameBonusClaimed");
+ const resetCash=document.getElementById("bombCashOut");if(resetCash)resetCash.remove();
  $("quizOverlay").style.display="none";$("rewardOverlay").style.display="none";$("rechargeOverlay").style.display="none";$("bonusOverlay").style.display="none";$("milestone").style.display="none";
  update();
 }
